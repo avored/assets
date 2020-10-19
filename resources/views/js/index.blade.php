@@ -1,3 +1,3 @@
-@foreach ($scripts as $key => $script)
-    <script src="{{ route('admin.script', $key) }}"></script>
+@foreach ($scripts as $script)
+    <script src="{{ route('admin.script', $script->key()) }}"></script>
 @endforeach

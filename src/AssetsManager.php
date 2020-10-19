@@ -33,36 +33,44 @@ class AssetsManager
         $this->styles = new Collection();
     }
 
-    /**
-     * Register Scripts for AvoRed
-     * @param string $key
-     * @param string $path
-     * @return void
-     */
-    public function registerJS($key, $path)
-    {
-        $this->register(self::JS, $key, $path);
-    }
-
-
     public function getJS($key)
     {
-        return $this->scripts->get($key);
+        $index = $this->scripts->search(function($item) use ($key) {
+            return $item->key() === $key;
+        });
+        return $this->scripts->get($index);
     }
     public function getCSS($key)
     {
+        $index = $this->styles->search(function($item) use ($key) {
+            return $item->key() === $key;
+        });
         return $this->styles->get($key);
     }
     
     /**
-     * Register Styles for AvoRed
-     * @param string $key
-     * @param string $path
+     * Register Scripts for AvoRed
+     * @param callable $path
      * @return void
      */
-    public function registerCSS($key, $path)
+    public function registerJS($item)
     {
-        $this->register(self::CSS, $key, $path);
+        $asset = new AssetItem();
+        $item($asset);
+
+        $this->register(self::JS, $asset);
+    }
+
+    /**
+     * Register Styles for AvoRed
+     * @param callable $item
+     * @return void
+     */
+    public function registerCSS($item)
+    {
+        $asset = new AssetItem();
+        $item($asset);
+        $this->register(self::CSS, $asset);
     }
 
     /**
@@ -92,13 +100,13 @@ class AssetsManager
      * @param string $path
      * @return void
      */
-    private function register($type, $key, $path): void
+    private function register($type, $item): void
     {   
         if ($type === self::JS) {
-            $this->scripts->put($key, $path);
+            $this->scripts->push($item);
         }
         if ($type === self::CSS) {
-            $this->styles->put($key, $path);
+            $this->styles->push($item);
         }
     }
 }
