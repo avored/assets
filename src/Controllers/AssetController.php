@@ -8,7 +8,12 @@ class AssetController
 {
     public function adminJS(string $key)
     {
-        $file = Asset::getJS($key);
+        $asset = Asset::getJS($key);
+        $file = $asset->path();
+
+        if ($file === null && !file_exists($file)) {
+            throw new \Exception('JS File not found: ' . $file);
+        }
 
         $expires = strtotime('+1 year');
         $lastModified = filemtime($file);
@@ -24,8 +29,13 @@ class AssetController
 
     public function adminCSS($key)
     {
-        $file = Asset::getCSS($key);
+        $asset = Asset::getJS($key);
+        $file = $asset->path();
 
+        if ($file === null && !file_exists($file)) {
+            throw new \Exception('CSS File not found: ' . $file);
+        }
+        
         $expires = strtotime('+1 year');
         $lastModified = filemtime($file);
         $cacheControl = 'public, max-age=31536000';

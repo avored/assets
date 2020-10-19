@@ -45,7 +45,7 @@ class AssetsManager
         $index = $this->styles->search(function($item) use ($key) {
             return $item->key() === $key;
         });
-        return $this->styles->get($key);
+        return $this->styles->get($index);
     }
     
     /**
@@ -79,6 +79,7 @@ class AssetsManager
      */
     public function renderJS(): View
     {
+        // dd($this->scripts);
         return view('avored-assets::js.index')
             ->with('scripts', $this->scripts);
     }
