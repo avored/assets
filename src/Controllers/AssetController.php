@@ -29,7 +29,7 @@ class AssetController
 
     public function adminCSS($key)
     {
-        $asset = Asset::getJS($key);
+        $asset = Asset::getCSS($key);
         $file = $asset->path();
 
         if ($file === null && !file_exists($file)) {
